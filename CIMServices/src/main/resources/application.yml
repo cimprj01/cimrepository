@@ -1,0 +1,13 @@
+server:
+  port: 11000
+   
+spring:
+  application:
+    name: cim-service
+  
+  cloud:
+     config:
+           enabled : true
+           uri: http://localhost:8888
+    
+

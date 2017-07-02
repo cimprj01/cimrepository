@@ -1,0 +1,13 @@
+server:
+  port: 12000
+   
+spring:
+  application:
+    name: cim-messaging
+  
+  cloud:
+     config:
+           enabled : true
+           uri: http://localhost:8888
+    
+

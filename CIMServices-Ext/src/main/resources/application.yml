@@ -1,0 +1,13 @@
+server:
+  port: 10001
+   
+spring:
+  application:
+    name: cim-equipmentservice
+  
+  cloud:
+     config:
+           enabled : true
+           uri: http://localhost:8888
+    
+

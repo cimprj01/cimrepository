@@ -1,0 +1,160 @@
+info:
+  component: Zuul Server
+  
+spring:
+  application:
+    name: cimenterprise-apigateway
+  profiles:
+    active: apigateway
+    
+    
+---
+#API Gateway profile
+spring:
+  profiles: apigateway    
+  cloud:
+    config:
+      uri: http://localhost:8888
+        
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+ribbon: 
+  ConnectTimeout: 30000
+  ReadTimeout: 30000
+  maxAutoRetries: 1
+  MaxAutoRetriesNextServer: 2
+  eureka:
+    enabled: true
+  ServerListRefreshInterval: 5000
+    
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+            strategy: THREAD
+        timeout:
+          enabled: false
+                  
+    fallback:
+      isolation:
+        semaphore:
+          maxConcurrentRequests: 700
+
+
+    circuitBreaker:
+      enabled: false
+      forceClosed: false 
+
+zuul:
+  ignoredServices: '*'
+  routes:
+    cim-coreservices:
+      path: /cim-service/**
+      serviceId: cim-service
+      
+    cim-extservice:
+      path: /cim-auxservice/**
+      serviceId: cim-equipmentservice
+            
+    zuulserver: /self/**
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URL:http://localhost:8761}/eureka/   
+      initialInstanceInfoReplicationIntervalSeconds: 5
+  instance:
+    registryFetchIntervalSeconds: 5
+    leaseRenewalIntervalInSeconds: 2
+    leaseExpirationDurationInSeconds: 5
+        
+
+server:
+  port: 8082
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
+    
+    
+    
+---
+#UI Profile
+spring:
+  profiles: uiserver
+  cloud:  
+    config:  
+      uri: http://localhost:8888
+        
+endpoints:
+  restart:
+    enabled: true
+  shutdown:
+    enabled: true
+  health:
+    sensitive: false
+
+ribbon: 
+  ConnectTimeout: 30000
+  ReadTimeout: 30000
+  maxAutoRetries: 1
+  MaxAutoRetriesNextServer: 2
+  eureka:
+    enabled: true
+  ServerListRefreshInterval: 5000
+    
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+            strategy: THREAD
+        timeout:
+          enabled: false
+                  
+    fallback:
+      isolation:
+        semaphore:
+          maxConcurrentRequests: 700
+
+
+    circuitBreaker:
+      enabled: false
+      forceClosed: false 
+
+zuul:
+  ignoredServices: '*'
+  routes:
+    cim-uiservices:
+      path: /cimui**
+      serviceId: cim-uiservice
+      
+    zuulserver: /self/**
+    
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761}/eureka/   
+      initialInstanceInfoReplicationIntervalSeconds: 5
+  instance:
+    registryFetchIntervalSeconds: 5
+    leaseRenewalIntervalInSeconds: 2
+    leaseExpirationDurationInSeconds: 5
+        
+
+server:
+  port: 8083
+
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG
+   

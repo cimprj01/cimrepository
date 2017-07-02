@@ -1,0 +1,57 @@
+spring:
+  application:
+    name: cimenterprise-configserver
+  profiles:
+    active: apigateway
+    
+---
+#API Gateway profile
+spring:
+  profiles: apigateway
+  cloud:
+    config:
+      server:
+        git:
+           uri: file:///Applications/Naveen/MES/workspace/configfiles/
+
+server:
+  port: 8888
+
+management:
+  context-path: /admin
+  
+logging:
+  level:
+    com.netflix.discovery: 'OFF'
+    org.springframework.cloud: 'DEBUG'
+    
+encrypt:
+  failOnError: false
+  keyStore:
+    location: classpath:keystore.jks
+    password: ${KEYSTORE_PASSWORD:foobar}
+    alias: test
+  
+eureka:
+  instance:
+     hostname: localhost
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+
+---
+spring:
+  profiles: uiserver
+eureka:
+#  password: password
+  instance:
+     hostname: localhost
+  client:
+    serviceUrl:
+#      defaultZone: ${vcap.services.${PREFIX:}eureka.credentials.uri:http://user:${eureka.password:}@${PREFIX:}eureka.${application.domain:cfapps.io}}/eureka/
+      defaultZone: ${vcap.services.${PREFIX:}eureka.credentials.uri:http://localhost:8761/eureka/
+    
+         
+       
+
